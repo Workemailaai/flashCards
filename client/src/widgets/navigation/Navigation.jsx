@@ -5,7 +5,24 @@ import './Navigation.css';
 export default function Navigation() {
   return (
     <>
-    <h1>Навигация</h1>
+    <nav className='header'>
+      <NavLink
+        to='/'
+        className={({ isActive }) =>
+          `header__link ${isActive && 'header__link--active'}`
+        }
+      >
+        ЧЛЕН1
+      </NavLink>
+      <NavLink
+        to='/Decks'
+        className={({ isActive }) =>
+          `header__link ${isActive && 'header__link--active'}`
+        }
+      >
+        ЧЛЕН2
+      </NavLink>      
+    </nav>
     </>
   );
 }
