@@ -1,0 +1,16 @@
+.flashCardDecksContainer {
+  display: flex;
+  flex-direction: column;
+  height: 400px;
+  width: 800px;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  border: 1px solid #fff;
+}
+.flashCardTitle {
+  display: flex;
+  width: 100%;
+  align-items: start;
+  border: 1px solid #fff;
+}

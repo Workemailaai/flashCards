@@ -1,11 +1,20 @@
-import React from 'react';
-import { useNavigate } from 'react-router';
-import './HomePage.css';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import "./HomePage.css";
 
 export default function HomePage() {
-//   const navigate = useNavigate();
+  //   const navigate = useNavigate();
 
   return (
-    <h2>ЧЛЕН</h2>
+    <>
+      <div className="flashCardDecksContainer">
+        <div className="flashCardTitle">
+          <h2>Flashcard Decks</h2>
+        </div>
+        <div className="decksContainer">
+
+        </div>
+      </div>
+    </>
   );
 }
