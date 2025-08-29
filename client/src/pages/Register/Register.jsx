@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-
+import { useNavigate } from "react-router";
+import "./Register.css";
 export const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState(null);
+  const navigate = useNavigate(); // 👈 хук для навигации
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -26,6 +28,7 @@ export const Register = () => {
       if (response.ok) {
         const data = await response.json(); // читаем ответ
         setStatus("✅ Пользователь зарегистрирован!");
+        navigate("/login"); // 👈 переход
       } else {
         let errorMessage = "Неизвестная ошибка";
         try {
@@ -43,7 +46,8 @@ export const Register = () => {
   };
 
   return (
-    <div>
+    <div className="registerContainer">
+      <h1>Регистрация</h1>
       <input
         type="text"
         placeholder="Введите имя"
