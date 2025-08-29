@@ -9,14 +9,29 @@ export const Register = () => {
     setEmail(e.target.value);
   };
 
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+  };
+
   const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-      e.preventDefault();
-      console.log(email);
-      setStatus("Errore");
+      const response = await fetch("http://localhost:3000/api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      if (response.ok) {
+        setStatus("✅ Пользователь зарегистрирован!");
+      } else {
+        const errorData = await response.json();
+        setStatus(`❌ Ошибка: ${errorData.message || "Неизвестная"}`);
+      }
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      setStatus("❌ Ошибка сети");
     }
+
     //Здесь должен быть фетч который записывает пользователя
     //1. input/pass 2. Fetch (POST) body{email, pass} 3. Завести state под статус записи
   };
@@ -30,7 +45,12 @@ export const Register = () => {
         onChange={handleEmailChange}
       />
 
-      <input type="password" label="password" />
+      <input
+        type="password"
+        label="password"
+        value={password}
+        onChange={handlePasswordChange}
+      />
       <button type="submit" onClick={handleSubmit}>
         Зарегестрироваться
       </button>
