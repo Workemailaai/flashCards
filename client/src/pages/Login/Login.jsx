@@ -21,8 +21,9 @@ const Login = () => {
         const data = await response.json();
         setUser(data.user);
         setStatus("✅ Успешный вход");
-        // например, сохраняем пользователя
         localStorage.setItem("user", JSON.stringify(data.user));
+        window.dispatchEvent(new Event("userChanged")); // 👈 своё событие
+
         // и переходим на главную
         navigate("/game"); // 👈 переход
       } else {
