@@ -25,7 +25,7 @@ export default function Navigation() {
 
   return (
     <div className="navContainer">
-      <h3>Навигация</h3>
+      <h3></h3>
       <div style={{ display: "flex", gap: "20px", paddingRight: "35px" }}>
         <NavLink to="/">Главная</NavLink>
         {user ? (

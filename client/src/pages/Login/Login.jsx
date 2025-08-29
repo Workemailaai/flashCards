@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import "./Login.css";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -37,30 +37,33 @@ const Login = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="email"
-        placeholder="Введите email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
+    <div >
+      <form className="loginContainer" onSubmit={handleSubmit}>
+        <h1>Авторизация</h1>
+        <input
+          type="email"
+          placeholder="Введите email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
 
-      <input
-        type="password"
-        placeholder="Введите пароль"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
+        <input
+          type="password"
+          placeholder="Введите пароль"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
-      <button type="submit">Войти</button>
-      {status && <p>{status}</p>}
-      {user && (
-        <div>
-          <p>Добро пожаловать, {user.name}!</p>
-          <p>Email: {user.email}</p>
-        </div>
-      )}
-    </form>
+        <button type="submit">Войти</button>
+        {status && <p>{status}</p>}
+        {user && (
+          <div>
+            <p>Добро пожаловать, {user.name}!</p>
+            <p>Email: {user.email}</p>
+          </div>
+        )}
+      </form>
+    </div>
   );
 };
 
