@@ -10,6 +10,19 @@ const normalize = (s = "") =>
     .replace(/[^\p{L}\p{N}\s-]/gu, "")
     .replace(/\s+/g, " ");
 
+// безопасно достаём userId из localStorage
+function getUserIdFromLS() {
+  try {
+    const raw = localStorage.getItem("user");
+    if (!raw) return null;
+    const obj = JSON.parse(raw);
+    const uid = Number(obj?.id);
+    return Number.isInteger(uid) ? uid : null;
+  } catch {
+    return null;
+  }
+}
+
 export default function DeckDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -24,15 +37,13 @@ export default function DeckDetail() {
   const [correct, setCorrect] = useState(0);
   const [feedback, setFeedback] = useState(null);
 
-  // отметки времени и защита от повторной отправки результата
   const startISO = useRef(new Date().toISOString());
   const postedRef = useRef(false);
 
-  // 1) Загружаем вопросы по колоде
   useEffect(() => {
     setLoading(true);
-    postedRef.current = false; // новый раунд — разрешаем постинг
-    startISO.current = new Date().toISOString(); // новая сессия
+    postedRef.current = false;
+    startISO.current = new Date().toISOString();
 
     fetch(`http://localhost:3000/api/decks/${id}/questions`)
       .then((res) => res.json())
@@ -61,19 +72,19 @@ export default function DeckDetail() {
     [idx, cards.length]
   );
 
-  // 2) Отправляем результат, когда дошли до конца
+  // отправляем результат после последнего вопроса
   useEffect(() => {
     if (!cards.length) return;
     const finished = idx >= cards.length && total > 0;
     if (!finished || postedRef.current) return;
 
-    postedRef.current = true; // чтобы не отправить повторно
+    postedRef.current = true;
+
     const payload = {
-      userId: 1, // подставь из auth, если есть
+      userId: getUserIdFromLS(), // <-- берём id из localStorage
       deckId: Number(id),
       score: correct,
       total,
-      // можно добавить startedAt/finishedAt позже, если расширите схему
     };
 
     fetch("http://localhost:3000/api/rounds", {
@@ -108,7 +119,7 @@ export default function DeckDetail() {
     setTotal(0);
     setCorrect(0);
     setFeedback(null);
-    postedRef.current = false; // заново разрешаем отправку
+    postedRef.current = false;
     startISO.current = new Date().toISOString();
   };
 
