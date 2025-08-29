@@ -6,6 +6,8 @@ router
   .get("/:id", DeckController.getDeckById)
   .post("/", DeckController.createDeck)
   .put("/:id", DeckController.updateDeck)
-  .delete("/:id", DeckController.deleteDeck);
+  .delete("/:id", DeckController.deleteDeck)
+  .get('/:deckId/questions', DeckController.getQuestions)
+  
 
 module.exports = router;

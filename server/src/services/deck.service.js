@@ -1,4 +1,5 @@
 const { Deck } = require("../db/models");
+const { Card } = require("../db/models");
 
 class DeckService {
   static async getAll() {
@@ -28,6 +29,25 @@ class DeckService {
       await deck.destroy();
     }
     return deck;
+  }
+  static async getQuestionsByDeckId(deckId) {
+    const deck = await Deck.findByPk(deckId);
+    if (!deck) return { deck: null, cards: [] };
+
+    const cards = await Card.findAll({
+      where: { deckId },
+      order: [["id", "ASC"]],
+      attributes: [
+        "id",
+        "question",
+        "answer",
+        "deckId",
+        "createdAt",
+        "updatedAt",
+      ],
+    });
+
+    return { deck, cards };
   }
 }
 

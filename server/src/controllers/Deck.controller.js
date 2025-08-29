@@ -121,6 +121,41 @@ class DeckController {
         .json(formatResponse(500, "Internal server error", null, message));
     }
   }
+  static async getQuestions(req, res) {
+    try {
+      const { deckId } = req.params;
+
+      if (!isValidId(deckId)) {
+        return res
+          .status(400)
+          .json(
+            formatResponse(
+              400,
+              "deckId должен быть положительным числом",
+              null,
+              "BAD_REQUEST"
+            )
+          );
+      }
+
+      const { deck, cards } = await DeckService.getQuestionsByDeckId(
+        Number(deckId)
+      );
+
+      if (!deck) {
+        return res
+          .status(404)
+          .json(formatResponse(404, "Колода не найдена", null, "NOT_FOUND"));
+      }
+
+      return res.json(formatResponse(200, "success", cards, null));
+    } catch (err) {
+      console.error("getQuestions error:", err);
+      return res
+        .status(500)
+        .json(formatResponse(500, "internal_error", null, err.message));
+    }
+  }
 }
 
 module.exports = DeckController;
