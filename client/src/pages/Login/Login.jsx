@@ -1,10 +1,12 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState(null);
   const [user, setUser] = useState(null);
+  const navigate = useNavigate(); // 👈 хук для навигации
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,6 +21,10 @@ const Login = () => {
         const data = await response.json();
         setUser(data.user);
         setStatus("✅ Успешный вход");
+        // например, сохраняем пользователя
+        localStorage.setItem("user", JSON.stringify(data.user));
+        // и переходим на главную
+        navigate("/game"); // 👈 переход
       } else {
         const error = await response.json();
         setStatus(`❌ Ошибка: ${error.message}`);
