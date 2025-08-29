@@ -9,6 +9,7 @@ export default function Navigation() {
       <div style={{ display: "flex", gap: "20px", paddingRight: "35px" }}>
         <NavLink to="/">Главная</NavLink>
         <NavLink to="/login">Логин</NavLink>
+        <NavLink to="/register">Регистрация</NavLink>
       </div>
     </div>
   );
