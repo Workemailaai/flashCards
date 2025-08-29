@@ -4,8 +4,9 @@ const RoundController = require("../controllers/Round.controller");
 router
   .get("/", RoundController.getAllRounds)
   .get("/:id", RoundController.getRoundById)
-  .post("/", RoundController.createRound)
   .put("/:id", RoundController.updateRound)
-  .delete("/:id", RoundController.deleteRound);
+  .delete("/:id", RoundController.deleteRound)
+  .post('/', RoundController.create)
+  .get('/user/:userId', RoundController.getByUser);
 
 module.exports = router;

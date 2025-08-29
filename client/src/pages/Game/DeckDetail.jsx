@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 const normalize = (s = "") =>
@@ -24,8 +24,16 @@ export default function DeckDetail() {
   const [correct, setCorrect] = useState(0);
   const [feedback, setFeedback] = useState(null);
 
+  // отметки времени и защита от повторной отправки результата
+  const startISO = useRef(new Date().toISOString());
+  const postedRef = useRef(false);
+
+  // 1) Загружаем вопросы по колоде
   useEffect(() => {
     setLoading(true);
+    postedRef.current = false; // новый раунд — разрешаем постинг
+    startISO.current = new Date().toISOString(); // новая сессия
+
     fetch(`http://localhost:3000/api/decks/${id}/questions`)
       .then((res) => res.json())
       .then((json) => {
@@ -37,6 +45,11 @@ export default function DeckDetail() {
           3: "Адриано Челентано",
         };
         setDeckTitle(names[id] || "Тема");
+        setIdx(0);
+        setAnswer("");
+        setTotal(0);
+        setCorrect(0);
+        setFeedback(null);
       })
       .catch((e) => console.error("load questions error:", e))
       .finally(() => setLoading(false));
@@ -47,6 +60,31 @@ export default function DeckDetail() {
     () => (cards.length ? `${idx + 1} / ${cards.length}` : "0 / 0"),
     [idx, cards.length]
   );
+
+  // 2) Отправляем результат, когда дошли до конца
+  useEffect(() => {
+    if (!cards.length) return;
+    const finished = idx >= cards.length && total > 0;
+    if (!finished || postedRef.current) return;
+
+    postedRef.current = true; // чтобы не отправить повторно
+    const payload = {
+      userId: 1, // подставь из auth, если есть
+      deckId: Number(id),
+      score: correct,
+      total,
+      // можно добавить startedAt/finishedAt позже, если расширите схему
+    };
+
+    fetch("http://localhost:3000/api/rounds", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    })
+      .then((r) => r.json())
+      .then((resp) => console.log("Round saved:", resp))
+      .catch(console.error);
+  }, [idx, cards.length, total, correct, id]);
 
   const submit = (e) => {
     e.preventDefault();
@@ -70,6 +108,8 @@ export default function DeckDetail() {
     setTotal(0);
     setCorrect(0);
     setFeedback(null);
+    postedRef.current = false; // заново разрешаем отправку
+    startISO.current = new Date().toISOString();
   };
 
   if (loading) return <p style={{ padding: "2rem" }}>Загрузка…</p>;

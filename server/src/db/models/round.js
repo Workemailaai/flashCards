@@ -8,19 +8,40 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      this.belongsTo(models.User, { foreignKey: "userId" });
-      this.belongsTo(models.Deck, { foreignKey: "deckId" });
+      this.belongsTo(models.User, { foreignKey: "userId", as: "user" });
+      this.belongsTo(models.Deck, { foreignKey: "deckId", as: "deck" });
     }
   }
   Round.init(
     {
-      userId: DataTypes.INTEGER,
-      deckId: DataTypes.INTEGER,
-      score: DataTypes.INTEGER,
+      userId: {
+        type: DataTypes.INTEGER,
+        allowNull: true, 
+      },
+      deckId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      score: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
+      total: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
     },
-    {
+      {
       sequelize,
       modelName: "Round",
+      tableName: "Rounds",
+      indexes: [
+        { fields: ["userId"] },
+        { fields: ["deckId"] },
+        { fields: ["userId", "deckId"] },
+      ],
     }
   );
   return Round;

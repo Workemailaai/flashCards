@@ -29,6 +29,18 @@ class RoundService {
     }
     return round;
   }
+
+  static async createRound({ userId, deckId, score, total }) {
+    const round = await Round.create({ userId, deckId, score, total });
+    return round;
+  }
+
+  static async getRoundsByUser(userId) {
+    return await Round.findAll({
+      where: { userId },
+      order: [["createdAt", "DESC"]],
+    });
+  }
 }
 
 module.exports = RoundService;
