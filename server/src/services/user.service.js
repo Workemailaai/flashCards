@@ -2,6 +2,16 @@ const { User } = require("../db/models");
 const bcrypt = require("bcrypt");
 
 class UserService {
+  static async login(email, password) {
+    const user = await User.findOne({ where: { email } });
+    if (!user) return null;
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return null;
+
+    return user;
+  }
+
   static async getAll() {
     return await User.findAll();
   }
