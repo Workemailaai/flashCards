@@ -2,7 +2,7 @@
 
 const data = [
   {
-    title: "Франция",
+    title: "Италия",
     createdAt: new Date(),
     updatedAt: new Date(),
   },
