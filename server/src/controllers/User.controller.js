@@ -3,6 +3,28 @@ const isValidId = require("../utils/isValidId");
 const formatResponse = require("../utils/formatResponse");
 
 class UserController {
+  static async login(req, res) {
+    try {
+      const { email, password } = req.body;
+      if (!email || !password) {
+        return res.status(400).json({ message: "Email и пароль обязательны" });
+      }
+
+      const user = await UserService.login(email, password);
+      if (!user) {
+        return res.status(401).json({ message: "Неверный email или пароль" });
+      }
+
+      res.status(200).json({
+        message: "Успешный вход",
+        user: { id: user.id, name: user.name, email: user.email },
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Ошибка сервера" });
+    }
+  }
+
   static async getAllUsers(req, res) {
     try {
       const users = await UserService.getAll();
