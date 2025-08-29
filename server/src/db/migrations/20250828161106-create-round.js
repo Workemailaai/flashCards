@@ -15,7 +15,9 @@ module.exports = {
           model: "Users",
           key: "id",
         },
-        onDelete: "cascade",
+        allowNull: true,
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
       },
       deckId: {
         type: Sequelize.INTEGER,
@@ -24,10 +26,11 @@ module.exports = {
           key: "id",
         },
         onDelete: "cascade",
+        onUpdate: "CASCADE",
+        allowNull: false,
       },
-      score: {
-        type: Sequelize.INTEGER,
-      },
+      score: { type: Sequelize.INTEGER, allowNull: false, defaultValue: 0 },
+      total: { type: Sequelize.INTEGER, allowNull: false, defaultValue: 0 },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
@@ -37,6 +40,10 @@ module.exports = {
         type: Sequelize.DATE,
       },
     });
+
+    // await queryInterface.addIndex("Rounds", ["userId"]);
+    // await queryInterface.addIndex("Rounds", ["deckId"]);
+    await queryInterface.addIndex("Rounds", ["userId", "deckId"]);
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable("Rounds");

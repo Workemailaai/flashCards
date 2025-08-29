@@ -3,9 +3,16 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/app.js",
     "dev": "nodemon src/app.js",
-    "db:reset": "npx sequelize db:drop && npx sequelize db:create && npx sequelize db:migrate && npx sequelize db:seed:all"
+    "dbHelp": "npx sequelize help",
+    "dbCreate": "npx sequelize db:create",
+    "dbDrop": "npx sequelize db:drop",
+    "dbMig": "npx sequelize db:migrate",
+    "dbMigUndo": "npx sequelize db:migrate:undo:all",
+    "dbSeed": "npx sequelize db:seed:all",
+    "dbSeedUndo": "npx sequelize db:seed:undo:all",
+    "dbInit": "npx sequelize db:create && npx sequelize db:migrate && npx sequelize db:seed:all"
   },
   "keywords": [],
   "author": "",
@@ -23,6 +30,8 @@
     "sequelize-cli": "^6.6.3"
   },
   "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "morgan": "^1.10.1",
