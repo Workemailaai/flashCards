@@ -1,4 +1,5 @@
 const { User } = require("../db/models");
+const bcrypt = require("bcrypt");
 
 class UserService {
   static async getAll() {
@@ -10,13 +11,23 @@ class UserService {
   }
 
   static async create(data) {
-    return await User.create(data);
+    // хэшируем пароль
+    const hashedPassword = await bcrypt.hash(data.password, 10);
+    return await User.create({
+      name: data.name || null,
+      email: data.email,
+      password: hashedPassword,
+    });
   }
 
   static async update(id, data) {
     const user = await this.getById(id);
     if (user) {
-      user.title = data.title;
+      user.name = data.name ?? user.name;
+      user.email = data.email ?? user.email;
+      if (data.password) {
+        user.password = await bcrypt.hash(data.password, 10);
+      }
       await user.save();
     }
     return user;

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 export const Register = () => {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState(null);
@@ -19,25 +20,36 @@ export const Register = () => {
       const response = await fetch("http://localhost:3000/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ name, email, password }),
       });
+
       if (response.ok) {
+        const data = await response.json(); // читаем ответ
         setStatus("✅ Пользователь зарегистрирован!");
       } else {
-        const errorData = await response.json();
-        setStatus(`❌ Ошибка: ${errorData.message || "Неизвестная"}`);
+        let errorMessage = "Неизвестная ошибка";
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.message || errorMessage;
+        } catch {
+          errorMessage = response.statusText; // если не JSON, берём статус
+        }
+        setStatus(`❌ Ошибка: ${errorMessage}`);
       }
     } catch (error) {
       console.error(error);
       setStatus("❌ Ошибка сети");
     }
-
-    //Здесь должен быть фетч который записывает пользователя
-    //1. input/pass 2. Fetch (POST) body{email, pass} 3. Завести state под статус записи
   };
 
   return (
     <div>
+      <input
+        type="text"
+        placeholder="Введите имя"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
       <input
         type="email"
         label="email"

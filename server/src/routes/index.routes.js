@@ -9,6 +9,7 @@ router.use("/decks", deckRoutes);
 router.use("/cards", cardRoutes);
 router.use("/rounds", roundRoutes);
 router.use("/users", userRoutes);
+router.use("/register", userRoutes);
 
 router.use((req, res) => {
   res.status(404).json(formatResponse(404, "Not found"));
