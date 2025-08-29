@@ -10,6 +10,7 @@ export default function Navigation() {
         <NavLink to="/">Главная</NavLink>
         <NavLink to="/login">Логин</NavLink>
         <NavLink to="/register">Регистрация</NavLink>
+        <NavLink to="/game">Игра</NavLink>
       </div>
     </div>
   );
